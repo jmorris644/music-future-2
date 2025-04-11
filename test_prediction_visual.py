@@ -42,17 +42,25 @@ print(f"\n📈 Prediction Quality:")
 print(f"   🔹 MSE: {mse:.6f}")
 print(f"   🔸 MAE: {mae:.6f}")
 
-# Plot a few predictions
+# --- Plot a few predictions ---
 num_to_plot = 5
+boost = 1000  # Artificial boost for visibility
+
 plt.figure(figsize=(12, 8))
 for i in range(num_to_plot):
     plt.subplot(num_to_plot, 1, i + 1)
-    plt.plot(actuals[i], label="Actual")
-    plt.plot(preds[i], label="Predicted", linestyle="dashed")
+
+    actual_scaled = actuals[i] * boost
+    predicted_scaled = preds[i] * boost
+
+    plt.plot(actual_scaled, label="Actual (x1000)")
+    plt.plot(predicted_scaled, label="Predicted (x1000)", linestyle="dashed")
+
+    min_val = min(np.min(actual_scaled), np.min(predicted_scaled))
+    max_val = max(np.max(actual_scaled), np.max(predicted_scaled))
+    plt.ylim(min_val - 1, max_val + 1)
+
     plt.title(f"Frame {i + SEQUENCE_LENGTH}")
     plt.legend()
 plt.tight_layout()
 plt.show(block=True)
-print("\n🔬 Sample frame stats:")
-print("   Actual[0] min/max:", np.min(actuals[0]), np.max(actuals[0]))
-print("   Predicted[0] min/max:", np.min(preds[0]), np.max(preds[0]))
