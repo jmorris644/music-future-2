@@ -1,0 +1,4 @@
+raw_music/
+training_frames/
+*.wav
+*.npy

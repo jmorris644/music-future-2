@@ -1,0 +1,9 @@
+Prediction Quality: 4-8-25-13-45
+   🔹 Mean Squared Error (MSE): 0.012563
+   🔸 Mean Absolute Error (MAE): 0.085991
+
+changed raw music samples. Used real music. Converted them to wav files.
+doubled size of model
+📈 Prediction Quality:
+   🔹 Mean Squared Error (MSE): 0.009113
+   🔸 Mean Absolute Error (MAE): 0.064882
