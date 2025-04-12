@@ -64,3 +64,8 @@ for filename in os.listdir(input_dir):
 print(f"\n✅ Done! Total training samples: {len(X_data)}")
 np.save(os.path.join(output_dir, "X.npy"), np.array(X_data))
 np.save(os.path.join(output_dir, "y.npy"), np.array(y_data))
+
+print("\n🔎 Sanity check:")
+print("   X[0] min/max:", np.min(X_data[0]), np.max(X_data[0]))
+print("   y[0] min/max:", np.min(y_data[0]), np.max(y_data[0]))
+
