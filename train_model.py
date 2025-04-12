@@ -16,13 +16,13 @@ X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.1, random_st
 model = tf.keras.models.load_model("saved_model/audio_predictor_lstm.keras")
 
 # Train the model
-early_stop = EarlyStopping(monitor="val_loss", patience=3, restore_best_weights=True)
+early_stop = EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
 
 model.fit(
     X_train, y_train,
     validation_data=(X_val, y_val),
-    epochs=25,
-    batch_size=32,
+    epochs=50,
+    batch_size=64,
     callbacks=[early_stop]
 )
 

@@ -12,7 +12,7 @@ model = Sequential([
     Dense(FRAME_SIZE * PREDICT_FRAMES, activation='tanh')  # Use tanh for waveform shape
 ])
 
-model.compile(optimizer='adam', loss='mse')
+model.compile(optimizer='adam', loss='mae')
 model.summary()
 
 # Save initial model
