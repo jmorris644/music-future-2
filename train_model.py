@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.layers import BatchNormalization
 import tensorflow as tf
 
 # Load training data
