@@ -1,12 +1,17 @@
-import tensorflow as tf
-from config import SEQUENCE_LENGTH, FRAME_SIZE
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+from config import FRAME_SIZE, SEQUENCE_LENGTH, PREDICT_FRAMES
 
-model = tf.keras.Sequential([
-    tf.keras.layers.Input(shape=(SEQUENCE_LENGTH, FRAME_SIZE)),
-    tf.keras.layers.LSTM(128, return_sequences=True),
-    tf.keras.layers.LSTM(64),
-    tf.keras.layers.Dense(FRAME_SIZE)
+model = Sequential([
+    LSTM(128, return_sequences=True, input_shape=(SEQUENCE_LENGTH, FRAME_SIZE)),
+    LSTM(64),
+    Dense(FRAME_SIZE * PREDICT_FRAMES)  # Predict multiple frames
 ])
 
 model.compile(optimizer='adam', loss='mse')
 model.summary()
+
+# Save model
+import os
+os.makedirs("saved_model", exist_ok=True)
+model.save("saved_model/audio_predictor_lstm.keras")
