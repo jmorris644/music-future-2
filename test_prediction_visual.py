@@ -1,3 +1,5 @@
+# 📁 File: test_prediction_visual.py (with residual learning enabled)
+
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,9 +11,9 @@ from config import SEQUENCE_LENGTH, FRAME_SIZE, SAMPLE_RATE, FRAME_DURATION_MS, 
 
 DO_PLOT = True
 MAX_PREDICTIONS = 5
-SKIP_FRAMES = 50  # Match how training skipped intro silence
+SKIP_FRAMES = 50  # Match training
 
-# Load test audio
+# Load a test audio file
 audio_path = os.path.join("raw_audio", os.listdir("raw_audio")[0])
 samples, sample_rate = sf.read(audio_path)
 if samples.ndim == 2:
@@ -24,13 +26,11 @@ if peak > 0:
     samples /= peak
 samples *= 0.95
 
-# Convert to frames
 frame_len = int(SAMPLE_RATE * FRAME_DURATION_MS / 1000)
 num_frames = len(samples) // frame_len
 frames = samples[:num_frames * frame_len].reshape((-1, frame_len))
 frames = frames[SKIP_FRAMES:]
 
-# Load model
 model = tf.keras.models.load_model("saved_model/audio_predictor_lstm.keras")
 
 preds = []
@@ -40,17 +40,17 @@ for i in range(min(len(frames) - SEQUENCE_LENGTH - PREDICT_FRAMES, MAX_PREDICTIO
     window = frames[i:i + SEQUENCE_LENGTH]
     target = frames[i + SEQUENCE_LENGTH:i + SEQUENCE_LENGTH + PREDICT_FRAMES]
 
-    pred = model.predict(np.expand_dims(window, axis=0), verbose=0)[0]
-    pred_frames = pred.reshape(PREDICT_FRAMES, FRAME_SIZE)
+    pred_delta = model.predict(np.expand_dims(window, axis=0), verbose=0)[0]
+    last_input_frame = window[-1]
+    pred_frames = pred_delta.reshape(PREDICT_FRAMES, FRAME_SIZE) + last_input_frame  # residual add
 
     preds.append(pred_frames)
     actuals.append(target)
 
-# Flatten for evaluation
+# Evaluate
 actual_flat = np.array(actuals).reshape(-1, FRAME_SIZE)
 preds_flat = np.array(preds).reshape(-1, FRAME_SIZE)
 
-# Evaluation metrics
 mse = mean_squared_error(actual_flat, preds_flat)
 mae = mean_absolute_error(actual_flat, preds_flat)
 

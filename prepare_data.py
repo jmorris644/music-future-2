@@ -59,7 +59,10 @@ for filename in os.listdir(input_dir):
                 frames = frames[50:]  # Skip intro
                 for i in range(len(frames) - SEQUENCE_LENGTH - PREDICT_FRAMES):
                     X_data.append(frames[i:i+SEQUENCE_LENGTH])
-                    y_data.append(frames[i+SEQUENCE_LENGTH:i+SEQUENCE_LENGTH+PREDICT_FRAMES].flatten())
+                    # Residual = target - last input frame
+                    residual = frames[i+SEQUENCE_LENGTH:i+SEQUENCE_LENGTH+PREDICT_FRAMES] - frames[i+SEQUENCE_LENGTH - 1]
+                    y_data.append(residual.flatten())
+
 
 print(f"\n✅ Done! Total training samples: {len(X_data)}")
 np.save(os.path.join(output_dir, "X.npy"), np.array(X_data))
