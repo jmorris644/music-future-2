@@ -26,7 +26,9 @@ model = tf.keras.models.load_model("saved_model/audio_predictor_lstm.keras")
 
 predicted_audio = []
 
-for i in range(len(frames) - SEQUENCE_LENGTH - PREDICT_FRAMES):
+MAX_EXPORT = 2000  # or 5000 for a short sample
+
+for i in range(min(len(frames) - SEQUENCE_LENGTH - PREDICT_FRAMES, MAX_EXPORT)):
     window = frames[i:i + SEQUENCE_LENGTH]
     last_input = window[-1]
     pred_delta = model.predict(np.expand_dims(window, axis=0), verbose=0)[0]
