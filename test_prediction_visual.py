@@ -1,5 +1,3 @@
-# 📁 File: test_prediction_visual.py (with residual learning enabled)
-
 import os
 import numpy as np
 import matplotlib.pyplot as plt

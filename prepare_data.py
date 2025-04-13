@@ -60,7 +60,15 @@ for filename in os.listdir(input_dir):
                 for i in range(len(frames) - SEQUENCE_LENGTH - PREDICT_FRAMES):
                     X_data.append(frames[i:i+SEQUENCE_LENGTH])
                     # Residual = target - last input frame
-                    residual = frames[i+SEQUENCE_LENGTH:i+SEQUENCE_LENGTH+PREDICT_FRAMES] - frames[i+SEQUENCE_LENGTH - 1]
+                    lookahead = 1  # how far forward you want to shift
+                    target_start = i + SEQUENCE_LENGTH + lookahead
+                    target_end = target_start + PREDICT_FRAMES
+
+                    if target_end <= len(frames):
+                        residual = frames[target_start:target_end] - frames[i + SEQUENCE_LENGTH - 1]
+                        y_data.append(residual.flatten())
+                        X_data.append(frames[i:i + SEQUENCE_LENGTH])
+
                     y_data.append(residual.flatten())
 
 
