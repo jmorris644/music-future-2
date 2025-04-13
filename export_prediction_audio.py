@@ -40,6 +40,6 @@ predicted_audio = np.concatenate(predicted_audio, axis=0)
 
 # Normalize and write to wav
 predicted_audio /= np.max(np.abs(predicted_audio))
-sf.write(output_path, predicted_audio, SAMPLE_RATE)
+sf.write(output_path, predicted_audio.flatten(), SAMPLE_RATE)
 
 print(f"✅ Exported predicted audio to {output_path}")
