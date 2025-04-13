@@ -29,4 +29,15 @@ predicted_audio = []
 for i in range(len(frames) - SEQUENCE_LENGTH - PREDICT_FRAMES):
     window = frames[i:i + SEQUENCE_LENGTH]
     last_input = window[-1]
-    pred_delta = model.predict(np.expand_dims(window,
+    pred_delta = model.predict(np.expand_dims(window, axis=0), verbose=0)[0]
+    pred_frames = pred_delta.reshape(PREDICT_FRAMES, FRAME_SIZE) + last_input
+    predicted_audio.append(pred_frames)
+
+# Flatten predictions into 1D array
+predicted_audio = np.concatenate(predicted_audio, axis=0)
+
+# Normalize and write to wav
+predicted_audio /= np.max(np.abs(predicted_audio))
+sf.write(output_path, predicted_audio, SAMPLE_RATE)
+
+print(f"✅ Exported predicted audio to {output_path}")
